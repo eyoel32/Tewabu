@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %></title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --color-paper: #f7f1e6;
+      --color-ink: #1c1712;
+      --color-muted: #6d6458;
+      --color-line: #e4d7c3;
+      --color-wash: #efe4d2;
+      --color-brand: #1b4d3e;
+      --color-brand-dark: #12362c;
+      --color-gold: #c4a35a;
+      --color-gold-soft: #ead9a8;
+      --color-brick: #9e2a2b;
+      --font-display: "Cormorant Garamond", Georgia, serif;
+      --font-body: "Outfit", system-ui, sans-serif;
+    }
+
+    .tilet {
+      height: 18px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='18' viewBox='0 0 32 18'%3E%3Crect width='32' height='18' fill='%231b4d3e'/%3E%3Crect y='3' width='32' height='1.4' fill='%23c4a35a'/%3E%3Cpath d='M8 6.2 L16 11.2 L24 6.2 L16 9.2 Z' fill='%239e2a2b'/%3E%3Cpath d='M16 7.4 L19 9.2 L16 10.4 L13 9.2 Z' fill='%23ead9a8'/%3E%3Crect y='13.6' width='32' height='1.4' fill='%23c4a35a'/%3E%3C/svg%3E") repeat-x left center / auto 18px;
+    }
+
+    .mesh {
+      background-image:
+        radial-gradient(circle at 12% 20%, rgba(196,163,90,0.18), transparent 32%),
+        radial-gradient(circle at 88% 10%, rgba(27,77,62,0.12), transparent 28%),
+        linear-gradient(180deg, #fbf6ec 0%, #f3ead9 100%);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-paper font-body text-ink antialiased">
+  <header class="sticky top-0 z-20 border-b border-line/70 bg-paper/90 backdrop-blur">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-8">
+      <a href="/" class="group flex items-center gap-3">
+        <span class="grid h-10 w-10 place-items-center rounded-full border border-gold bg-brand text-sm font-semibold tracking-widest text-gold-soft">TS</span>
+        <span>
+          <span class="block font-display text-2xl leading-none tracking-wide"><%= typeof shopName !== 'undefined' ? shopName : 'Tewabu Shifon' %></span>
+          <span class="text-[11px] uppercase tracking-[0.28em] text-muted">Habesha kemis</span>
+        </span>
+      </a>
+
+      <% if (typeof area === 'undefined' || area !== 'admin') { %>
+        <nav class="flex items-center gap-2 text-sm sm:gap-5">
+          <a href="/" class="hidden text-muted hover:text-brand sm:inline">Shop</a>
+          <a href="https://wa.me/<%= typeof whatsappNumber !== 'undefined' ? whatsappNumber : '251932174589' %>" target="_blank" rel="noopener"
+             class="rounded-full bg-brand px-4 py-2 font-medium text-white hover:bg-brand-dark">WhatsApp</a>
+        </nav>
+      <% } else { %>
+        <nav class="flex flex-wrap items-center justify-end gap-2 text-sm sm:gap-4">
+          <a href="/admin" class="text-muted hover:text-brand">Cloth</a>
+          <a href="/admin/new" class="text-muted hover:text-brand">Add</a>
+          <a href="/admin/account" class="text-muted hover:text-brand">Account</a>
+          <a href="/" class="text-muted hover:text-brand">Shop</a>
+          <form method="post" action="/admin/logout">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="rounded-full border border-line px-3 py-1.5 text-muted hover:border-brick hover:text-brick">Log out</button>
+          </form>
+        </nav>
+      <% } %>
+    </div>
+    <div class="tilet"></div>
+  </header>

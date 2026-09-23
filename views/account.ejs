@@ -1,0 +1,43 @@
+<%- include('top', { title: 'Change username / password', area: 'admin' }) %>
+
+<main class="mx-auto max-w-2xl px-4 py-10 sm:px-8">
+  <a href="/admin" class="text-sm text-muted hover:text-brand">&larr; Back</a>
+  <h1 class="mt-4 font-display text-4xl">Account</h1>
+  <p class="mt-2 text-muted">Change the username or password used to sign in.</p>
+
+  <% if (error) { %>
+    <p class="mt-4 rounded-2xl bg-brick/10 px-4 py-3 text-sm text-brick"><%= error %></p>
+  <% } %>
+  <% if (message) { %>
+    <p class="mt-4 rounded-2xl bg-brand/10 px-4 py-3 text-sm text-brand"><%= message %></p>
+  <% } %>
+
+  <form method="post" action="/admin/account"
+        class="mt-8 space-y-5 rounded-3xl border border-line bg-white/70 p-6 sm:p-8">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <label class="block text-sm font-medium">Username
+      <input name="username" value="<%= username %>" required
+             class="mt-1 w-full rounded-2xl border border-line bg-paper px-4 py-3 outline-none focus:border-gold">
+    </label>
+    <label class="block text-sm font-medium">New password (leave empty to keep the old one)
+      <input name="password" type="password" autocomplete="new-password"
+             class="mt-1 w-full rounded-2xl border border-line bg-paper px-4 py-3 outline-none focus:border-gold">
+    </label>
+    <label class="block text-sm font-medium">Repeat new password
+      <input name="again" type="password" autocomplete="new-password"
+             class="mt-1 w-full rounded-2xl border border-line bg-paper px-4 py-3 outline-none focus:border-gold">
+    </label>
+    <hr class="border-line">
+    <label class="block text-sm font-medium">Your current password (required)
+      <input name="current" type="password" required
+             class="mt-1 w-full rounded-2xl border border-line bg-paper px-4 py-3 outline-none focus:border-gold">
+    </label>
+    <div class="flex flex-wrap gap-3 pt-2">
+      <button type="submit" class="rounded-full bg-brand px-6 py-3 font-medium text-white hover:bg-brand-dark">Save</button>
+      <a href="/admin" class="rounded-full border border-line px-6 py-3 hover:bg-wash">Back</a>
+    </div>
+  </form>
+</main>
+</body>
+</html>

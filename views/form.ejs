@@ -1,0 +1,58 @@
+<%- include('top', { title: heading, area: 'admin' }) %>
+
+<main class="mx-auto max-w-2xl px-4 py-10 sm:px-8">
+  <a href="/admin" class="text-sm text-muted hover:text-brand">&larr; Back</a>
+  <h1 class="mt-2 font-display text-4xl"><%= heading %></h1>
+
+  <% if (error) { %>
+    <p class="mt-4 rounded-2xl bg-brick/10 px-4 py-3 text-sm text-brick"><%= error %></p>
+  <% } %>
+
+  <form method="post" action="<%= action %>" enctype="multipart/form-data"
+        class="mt-4 space-y-3 rounded-3xl border border-line bg-white/70 p-4 sm:p-5">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <label class="block text-sm font-medium">Name
+      <input name="name" value="<%= item.name %>" required
+             class="mt-1 w-full rounded-2xl border border-line bg-paper px-4 py-2 outline-none focus:border-gold">
+    </label>
+    <label class="block text-sm font-medium">Price (ETB)
+      <input name="price" type="number" min="1" step="any" value="<%= item.price %>" required
+             class="mt-1 w-full rounded-2xl border border-line bg-paper px-4 py-2 outline-none focus:border-gold">
+    </label>
+    <label class="block text-sm font-medium">Description
+      <textarea name="description" rows="2"
+                class="mt-1 w-full rounded-2xl border border-line bg-paper px-4 py-2 outline-none focus:border-gold"><%= item.description %></textarea>
+    </label>
+
+    <% if (images && images.length > 0) { %>
+      <div class="text-sm">
+        <p class="font-medium">Current pictures</p>
+        <div class="mt-2 flex flex-wrap gap-3">
+          <% images.forEach(im => { %>
+            <label class="flex flex-col items-center gap-1 text-xs text-muted">
+              <img src="/uploads/<%= im.filename %>" alt="" class="h-20 w-16 rounded-2xl object-cover">
+              <span class="flex items-center gap-1">
+                <input type="checkbox" name="remove" value="<%= im.id %>">
+                Remove
+              </span>
+            </label>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+
+    <label class="block text-sm font-medium">
+      Add pictures (JPG, PNG or WebP, up to 5 MB each, up to 8 total)
+      <input type="file" name="images" multiple accept="image/jpeg,image/png,image/webp"
+             class="mt-2 w-full text-sm text-muted file:mr-3 file:rounded-full file:border-0 file:bg-brand file:px-4 file:py-2 file:text-white">
+    </label>
+
+    <div class="flex flex-wrap gap-3 pt-2">
+      <button type="submit" class="rounded-full bg-brand px-6 py-3 font-medium text-white hover:bg-brand-dark">Save</button>
+      <a href="/admin" class="rounded-full border border-line px-6 py-3 hover:bg-wash">Cancel</a>
+    </div>
+  </form>
+</main>
+</body>
+</html>

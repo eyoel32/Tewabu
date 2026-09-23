@@ -1,0 +1,16 @@
+  <footer class="mt-auto border-t border-line bg-brand text-gold-soft">
+    <div class="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:flex-row sm:items-end sm:justify-between sm:px-8">
+      <div>
+        <p class="font-display text-3xl text-white"><%= typeof shopName !== 'undefined' ? shopName : 'Tewabu Shifon' %></p>
+        <p class="mt-2 max-w-sm text-sm text-white/70">Handwoven shifon and cotton kemis. Message us to order — we reply on WhatsApp and Telegram.</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href="https://wa.me/<%= typeof whatsappNumber !== 'undefined' ? whatsappNumber : '251932174589' %>" target="_blank" rel="noopener"
+           class="rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20">WhatsApp</a>
+        <a href="https://t.me/<%= typeof telegramUsername !== 'undefined' ? telegramUsername : 'we4543' %>" target="_blank" rel="noopener"
+           class="rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20">Telegram</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

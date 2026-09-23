@@ -1,0 +1,122 @@
+<%- include('top', { title: 'Your cloth', area: 'admin' }) %>
+
+<main class="mx-auto max-w-6xl px-4 py-10 sm:px-8">
+  <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <p class="text-xs uppercase tracking-[0.3em] text-gold">Studio</p>
+      <h1 class="font-display text-4xl sm:text-5xl">Your cloth</h1>
+    </div>
+    <a href="/admin/new" class="rounded-full bg-brand px-5 py-2.5 font-medium text-white hover:bg-brand-dark">Add cloth</a>
+  </div>
+
+  <% if (products.length === 0) { %>
+    <div class="rounded-3xl border border-dashed border-line bg-wash/60 px-6 py-16 text-center">
+      <p class="font-display text-3xl">No cloth yet</p>
+      <p class="mt-2 text-muted">Press Add cloth to list your first kemis.</p>
+    </div>
+  <% } else { %>
+    <ul class="grid gap-4">
+      <% products.forEach(p => { %>
+        <li class="grid items-center gap-4 rounded-3xl border border-line bg-white/70 p-4 sm:grid-cols-[88px_1fr_auto]">
+            <div class="h-24 w-20 overflow-hidden rounded-2xl bg-wash">
+            <% if (p.image) { %>
+              <img src="/uploads/<%= p.image %>" alt="" class="h-full w-full object-cover">
+            <% } else { %>
+              <span class="grid h-full place-items-center px-2 text-center text-xs text-muted">No picture</span>
+            <% } %>
+          </div>
+          <div>
+            <h2 class="font-display text-2xl"><%= p.name %></h2>
+            <p class="text-muted"><%= Number(p.price).toLocaleString('en-US') %> ETB</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <a href="/admin/edit/<%= p.id %>" class="rounded-full border border-line px-4 py-2 text-sm hover:border-brand hover:text-brand">Edit</a>
+            <form method="post" action="/admin/delete/<%= p.id %>"
+                  class="delete-form" data-cloth-name="<%= p.name %>">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button type="submit" class="rounded-full border border-line px-4 py-2 text-sm hover:border-brick hover:text-brick">Delete</button>
+            </form>
+          </div>
+        </li>
+      <% }) %>
+    </ul>
+  <% } %>
+</main>
+
+<!-- Delete confirmation modal -->
+<div id="delete-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-ink/50 px-4">
+  <div class="w-full max-w-sm rounded-3xl bg-white p-6 shadow-[0_30px_60px_-30px_rgba(28,23,18,0.6)]">
+    <p class="text-xs uppercase tracking-[0.3em] text-brick">Delete</p>
+    <h2 class="mt-2 font-display text-2xl">Delete this cloth?</h2>
+    <p id="delete-modal-name" class="mt-2 text-sm text-muted"></p>
+    <p class="mt-1 text-sm text-muted">This cannot be undone.</p>
+    <div class="mt-6 flex gap-3">
+      <button id="delete-modal-cancel" type="button"
+              class="flex-1 rounded-full border border-line px-4 py-2.5 text-sm font-medium hover:bg-wash">Cancel</button>
+      <button id="delete-modal-confirm" type="button"
+              class="flex-1 rounded-full bg-brick px-4 py-2.5 text-sm font-medium text-white hover:bg-brick/90">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<% if (deletedName) { %>
+  <div id="toast" class="fixed inset-x-0 bottom-6 z-50 flex justify-center px-4">
+    <div class="flex items-center gap-3 rounded-full bg-ink px-5 py-3 text-sm text-white shadow-[0_20px_40px_-20px_rgba(0,0,0,0.5)]">
+      <span class="flex h-5 w-5 flex-none items-center justify-center rounded-full bg-brand text-xs">✓</span>
+      <span>"<%= deletedName %>" was deleted.</span>
+    </div>
+  </div>
+<% } %>
+
+<script>
+  // Custom delete confirmation modal
+  var modal = document.getElementById('delete-modal');
+  var modalName = document.getElementById('delete-modal-name');
+  var cancelBtn = document.getElementById('delete-modal-cancel');
+  var confirmBtn = document.getElementById('delete-modal-confirm');
+  var pendingForm = null;
+
+  document.querySelectorAll('.delete-form').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      pendingForm = form;
+      modalName.textContent = form.dataset.clothName || '';
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    });
+  });
+
+  function closeModal() {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    pendingForm = null;
+  }
+
+  cancelBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) {
+    if (e.target === modal) closeModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  confirmBtn.addEventListener('click', function () {
+    if (pendingForm) pendingForm.submit();
+  });
+
+  // Toast: auto-dismiss and clean the URL so refreshing doesn't re-show it
+  var toast = document.getElementById('toast');
+  if (toast) {
+    if (window.history.replaceState) {
+      window.history.replaceState(null, '', '/admin');
+    }
+    setTimeout(function () {
+      toast.style.transition = 'opacity 0.4s ease';
+      toast.style.opacity = '0';
+      setTimeout(function () { toast.remove(); }, 400);
+    }, 3000);
+  }
+</script>
+</body>
+</html>

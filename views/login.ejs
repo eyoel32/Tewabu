@@ -1,0 +1,27 @@
+<%- include('top', { title: 'Owner login', area: 'login' }) %>
+
+<main class="mesh flex min-h-[70vh] items-center justify-center px-4 py-16">
+  <form method="post" action="/admin/login"
+        class="w-full max-w-md rounded-3xl border border-line bg-white/80 p-8 shadow-[0_30px_60px_-40px_rgba(28,23,18,0.7)]">
+    <p class="text-xs uppercase tracking-[0.3em] text-gold">Owner</p>
+    <h1 class="mt-2 font-display text-4xl">Welcome back</h1>
+    <p class="mt-2 text-sm text-muted">Sign in to add and edit cloth.</p>
+
+    <% if (error) { %>
+      <p class="mt-4 rounded-2xl bg-brick/10 px-4 py-3 text-sm text-brick"><%= error %></p>
+    <% } %>
+
+    <label class="mt-6 block text-sm font-medium">Username
+      <input name="username" required autofocus
+             class="mt-1 w-full rounded-2xl border border-line bg-paper px-4 py-3 outline-none focus:border-gold">
+    </label>
+    <label class="mt-4 block text-sm font-medium">Password
+      <input name="password" type="password" required
+             class="mt-1 w-full rounded-2xl border border-line bg-paper px-4 py-3 outline-none focus:border-gold">
+    </label>
+    <button type="submit"
+            class="mt-6 w-full rounded-full bg-brand py-3 font-medium text-white hover:bg-brand-dark">Log in</button>
+  </form>
+</main>
+</body>
+</html>

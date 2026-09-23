@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= item.name %> | <%= shopName %></title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --color-paper: #fdfdfb; --color-ink: #22232b; --color-muted: #62616a;
+      --color-line: #e3e1da; --color-wash: #f3f1ec; --color-brand: #1f5c4a;
+      --color-brand-dark: #17463a; --color-gold: #b9851a;
+      --font-display: "Gilda Display", Georgia, serif;
+      --font-body: "Jost", system-ui, sans-serif;
+    }
+    html, body { height: 100%; }
+    .gallery::-webkit-scrollbar { display: none; }
+    .gallery { scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-paper font-body text-base leading-relaxed text-ink overflow-hidden">
+     <header class="flex items-center justify-between bg-wash px-4 py-3 sm:px-10">
+    <a href="/" class="flex items-center gap-3">
+      <span class="flex h-10 w-10 items-center justify-center rounded-full bg-brand text-sm font-medium text-white">
+        <%= shopName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() %>
+      </span>
+      <span>
+        <span class="block font-display text-xl leading-tight tracking-wide"><%= shopName %></span>
+        <span class="block text-xs tracking-widest text-muted">HABESHA KEMIS</span>
+      </span>
+    </a>
+    <nav class="flex items-center gap-5">
+      <a href="/" class="text-sm text-ink hover:text-brand">Shop</a>
+      <a href="https://wa.me/<%= whatsappNumber %>" target="_blank" rel="noopener"
+         class="rounded-full bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-dark">WhatsApp</a>
+    </nav>
+  </header>
+  <div class="tilet"></div>
+
+  <main class="mx-auto max-w-6xl px-4 pb-4 pt-2 sm:px-10">
+    <a href="/" class="mb-3 inline-block text-sm text-muted hover:text-brand">&larr; All cloth</a>
+
+    <article class="grid gap-6 md:grid-cols-2 md:gap-10">
+      <div class="mx-auto w-full max-w-xs md:max-w-none">
+        <% if (images.length) { %>
+          <div class="relative">
+            <div id="gallery" class="gallery flex snap-x snap-mandatory gap-3 overflow-x-auto rounded-sm">
+              <% images.forEach((im, i) => { %>
+                <img src="/uploads/<%= im.filename %>" alt="<%= item.name %>, picture <%= i + 1 %> of <%= images.length %>"
+                     class="aspect-square w-full flex-none snap-start bg-wash object-cover">
+              <% }) %>
+            </div>
+
+            <% if (images.length > 1) { %>
+              <div id="swipe-hint" class="pointer-events-none absolute inset-y-0 right-3 flex items-center transition-opacity duration-500">
+                <span class="flex h-9 w-9 items-center justify-center rounded-full bg-ink/60 text-white animate-pulse">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                    <path d="M9 6l6 6-6 6" />
+                  </svg>
+                </span>
+              </div>
+            <% } %>
+          </div>
+          <% if (images.length > 1) { %>
+            <p class="mt-1 text-center text-xs text-muted">
+              <span id="pic-count">1</span>/<%= images.length %>
+            </p>
+          <% } %>
+        <% } else { %>
+          <div class="flex aspect-square items-center justify-center bg-wash text-sm text-muted">No picture yet</div>
+        <% } %>
+      </div>
+
+      <div>
+        <h1 class="font-display text-2xl leading-tight tracking-tight sm:text-3xl"><%= item.name %></h1>
+
+        <p class="mt-2 tabular-nums">
+          <span class="text-2xl font-medium"><%= Number(item.price).toLocaleString('en-US') %></span>
+          <span class="ml-1 text-sm text-muted">ETB</span>
+        </p>
+        <p class="mt-1 text-sm text-muted">
+          Code: <span class="font-medium tracking-wider text-ink"><%= codeOf(item.id) %></span>
+        </p>
+
+        <div class="my-3 h-0.5 w-12 bg-gold"></div>
+
+        <% if (item.description) { %>
+          <p class="max-w-xl whitespace-pre-line text-sm leading-6"><%= item.description %></p>
+        <% } %>
+
+        <div class="mt-4 border-t border-line pt-4">
+          <p class="mb-2 text-sm text-muted">Message us to order:</p>
+          <div class="flex flex-wrap gap-3">
+            <a href="<%= whatsappLink %>" target="_blank" rel="noopener"
+               class="rounded-sm border border-brand bg-brand px-5 py-2 text-sm font-medium text-white hover:bg-brand-dark">Order on WhatsApp</a>
+            <a href="<%= telegramLink %>" target="_blank" rel="noopener"
+               class="rounded-sm border border-ink px-5 py-2 text-sm font-medium hover:bg-wash">Order on Telegram</a>
+          </div>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <script>
+    var gallery = document.getElementById('gallery');
+    var hint = document.getElementById('swipe-hint');
+    var counter = document.getElementById('pic-count');
+
+    if (gallery && hint) {
+      gallery.addEventListener('scroll', function () {
+        hint.style.opacity = '0';
+      }, { once: true });
+    }
+
+    if (gallery && counter) {
+      gallery.addEventListener('scroll', function () {
+        var pictureWidth = gallery.firstElementChild.offsetWidth + 12; // 12 = the gap-3 spacing
+        var current = Math.round(gallery.scrollLeft / pictureWidth) + 1;
+        counter.textContent = current;
+      });
+    }
+  </script>
+</body>
+</html>
